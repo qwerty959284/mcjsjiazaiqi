@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript代码生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        .options-panel {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .option-group {
+            margin-bottom: 20px;
+        }
+        
+        .option-group h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: 500;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .preview-panel {
+            flex: 2;
+            background: #2c3e50;
+            color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            overflow: auto;
+            max-height: 600px;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            font-family: 'Consolas', 'Monaco', monospace;
+            line-height: 1.5;
+        }
+        
+        .code-keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .code-function {
+            color: #3498db;
+        }
+        
+        .code-string {
+            color: #2ecc71;
+        }
+        
+        .code-comment {
+            color: #95a5a6;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: #ecf0f1;
+        }
+        
+        .btn-copy {
+            background: #27ae60;
+        }
+        
+        .btn-copy:hover {
+            background: #219653;
+        }
+        
+        .btn-download {
+            background: #9b59b6;
+        }
+        
+        .btn-download:hover {
+            background: #8e44ad;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>JavaScript代码生成器</h1>
+            <p class="subtitle">根据您的需求生成自定义JavaScript代码</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="options-panel">
+                <div class="option-group">
+                    <h3>玩家设置</h3>
+                    <label for="playerName">玩家名称</label>
+                    <input type="text" id="playerName" value="玩家">
+                    
+                    <label for="toastMessage">提示消息</label>
+                    <input type="text" id="toastMessage" value="你好JS">
+                </div>
+                
+                <div class="option-group">
+                    <h3>命令设置</h3>
+                    <label for="command">执行命令</label>
+                    <input type="text" id="command" value="/tp @s ~ -100 ~">
+                </div>
+                
+                <div class="option-group">
+                    <h3>Python代码</h3>
+                    <label for="pythonCode">Python代码片段</label>
+                    <textarea id="pythonCode" rows="4">import modellenLextraClientApi as clientApi
+comp = clientApi.GetEngineCompFactory().CreateSkyRender(clientApi.GetLevelId()).ncomp.SetSkyColor((1.0, 0.7529, 0.7961, 1.01))</textarea>
+                </div>
+                
+                <button id="generateBtn">生成代码</button>
+            </div>
+            
+            <div class="preview-panel">
+                <pre id="codePreview"><code>// 生成的代码将显示在这里</code></pre>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button class="btn-copy" id="copyBtn">复制代码</button>
+            <button class="btn-download" id="downloadBtn">下载代码</button>
+        </div>
+    </div>
+    
+    <footer>
+        <p>JavaScript代码生成器 &copy; 2023 - 基于提供的代码示例</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const codePreview = document.getElementById('codePreview');
+            
+            // 初始代码示例
+            const initialCode = `let local = getLocalPlayer()  
+let name = local.getName()  
+local_jumpFrom(Sound()  
+alert(name)  
+showToast("你好JS")  
+showToast("你好JS", false)  
+
+// 启用命令  
+executeCommand("/tp @s ~ -100 ~")  
+jumpFrom(Sound())  
+
+// 这里执行.py代码  
+callPython('import modellenLextraClientApi as clientApi\\ncomp = clientApi.GetEngineCompFactory().CreateSkyRender(clientApi.GetLevelId()).ncomp.SetSkyColor((1.0, 0.7529, 0.7961, 1.01))')`;
+            
+            // 高亮代码函数
+            function highlightCode(code) {
+                return code
+                    .replace(/(let|function|return|if|else|for|while|const|var)/g, '<span class="code-keyword">$1</span>')
+                    .replace(/(getLocalPlayer|getName|local_jumpFrom|alert|showToast|executeCommand|jumpFrom|callPython)/g, '<span class="code-function">$1</span>')
+                    .replace(/(".*?"|'.*?')/g, '<span class="code-string">$1</span>')
+                    .replace(/\/\/.*/g, '<span class="code-comment">$&</span>');
+            }
+            
+            // 设置初始代码
+            codePreview.innerHTML = highlightCode(initialCode);
+            
+            // 生成代码
+            generateBtn.addEventListener('click', function() {
+                const playerName = document.getElementById('playerName').value;
+                const toastMessage = document.getElementById('toastMessage').value;
+                const command = document.getElementById('command').value;
+                const pythonCode = document.getElementById('pythonCode').value;
+                
+                const generatedCode = `let local = getLocalPlayer()  
+let name = local.getName()  
+local_jumpFrom(Sound()  
+alert("${playerName}")  
+showToast("${toastMessage}")  
+showToast("${toastMessage}", false)  
+
+// 启用命令  
+executeCommand("${command}")  
+jumpFrom(Sound())  
+
+// 这里执行.py代码  
+callPython('${pythonCode.replace(/'/g, "\\'").replace(/\n/g, '\\n')}')`;
+                
+                codePreview.innerHTML = highlightCode(generatedCode);
+            });
+            
+            // 复制代码
+            copyBtn.addEventListener('click', function() {
+                const textArea = document.createElement('textarea');
+                textArea.value = codePreview.textContent;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                alert('代码已复制到剪贴板！');
+            });
+            
+            // 下载代码
+            downloadBtn.addEventListener('click', function() {
+                const codeContent = codePreview.textContent;
+                const blob = new Blob([codeContent], { type: 'text/javascript' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'generated_code.js';
+                a.click();
+                
+                URL.revokeObjectURL(url);
+            });
+        });
+    </script>
+</body>
+</html>
